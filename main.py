@@ -8,18 +8,22 @@ from lib.sumologic import SumoLogic
 now = datetime.now()
 f = Figlet(font='big')
 print(f.renderText('SumoLogic SDK'))
-c_datetime = now.strftime("%y/%m/%d %H:%M:%S")
+c_datetime = now.strftime("%y/%m/%d_%H:%M:%S")
 print(c_datetime)
 
 args = sys.argv
-sumo = SumoLogic("ACCESSID", "ACCESSKEY")
-dashID = "DASHBOARDID"
+sumo = SumoLogic("ACCESS-ID", "ACCESS-KEY")
+dashID = "DASHBOARD-ID"
+actionType="DirectDownloadReportAction"
+exportFormat="Png"
+timezone="America/New_York" 
+template="DashboardTemplate"
 
 
 def main():
 
     time.sleep(3)
-    reportID = sumo.start_report()
+    reportID = sumo.start_report(actionType, exportFormat, timezone, template, dashID)
     print("Report Job ID: " + reportID)
 
     keepGoing = True
@@ -34,10 +38,9 @@ def main():
             keepGoing = False
         elif reportStatus == "Success":
             print("SUCCESS: Report Job Complete")
+            reportGenerate = sumo.report_result(reportID)
+            print(reportGenerate)
             keepGoing = False
-
-    reportGenerate = sumo.report_result(reportID)
-    print(reportGenerate)
 
 
 def get_time():

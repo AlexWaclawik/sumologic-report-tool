@@ -2,6 +2,7 @@ import json
 import requests
 import os
 import sys
+import time
 try:
     import cookielib
 except ImportError:
@@ -94,24 +95,6 @@ class SumoLogic(object):
         files = {'file': (params['file_name'], file_data)}
         r = requests.post(endpoint + method, files=files, params=post_params,
                 auth=(self.session.auth[0], self.session.auth[1]), headers=headers)
-        if 400 <= r.status_code < 600:
-            r.reason = r.text
-        r.raise_for_status()
-        return r
-
-    def get_file(self, method, params, headers=None, version=None):
-        '''
-            based this off the post_file method above and is intended for the new report job methods
-            the dashboard report is downloaded as "result.xxx" and is placed in the root directory
-        '''
-        version = version or self.DEFAULT_VERSION
-        endpoint = self.get_versioned_endpoint(version)
-        img = requests.get(endpoint + method, params=params, allow_redirects=True, auth=(self.session.auth[0], self.session.auth[1]), headers=headers)
-        filetype = params['exportFormat']
-        filename = 'result.' + str(filetype)
-        with open(filename, 'wb') as f:
-            f.write(img.content)
-        r = self.session.get(endpoint + method, params=params)
         if 400 <= r.status_code < 600:
             r.reason = r.text
         r.raise_for_status()
@@ -314,30 +297,6 @@ class SumoLogic(object):
         return self.post('/content/%s/move?destinationFolderId=%s' % (content_id, destination_folder), params=None,
                          version='v2')
 
-    #dashboard (new)
-    def start_report(self, action_type, export_format, timezone, template, dashid):
-        content = {
-            "action": {
-                "actionType": action_type,
-            },
-            "exportFormat": export_format,
-            "timezone" : timezone,
-            "template": {
-                "templateType": template,
-                "id": dashid
-            }
-        }
-        r = self.post('/dashbaords/reportJobs', params=content, version='v2')
-        return json.loads(r.text)['id']
-
-    def report_status(self, jobID):
-        r = self.get('/dashboards/reportJobs/' + str(jobID) + '/status', params=jobID, version='v2')
-        return json.loads(r.text)['status']
-
-    def report_result(self, jobID):
-        r = self.get_file('/dashboards/reportJobs/' + str(jobID) + '/results', params=jobID, version='v2')
-        return json.loads(r.text)['id']
-
     # Lookup
     def create_lookup_table(self, content):
         return self.post('/lookupTables', params=content, version='v1')
@@ -430,3 +389,62 @@ class SumoLogic(object):
 
     def delete_existing_field(self, field_id):
         return self.delete('/fields/%s' % field_id)
+
+    #-----------------------#
+
+    # start a dashboard report
+    def start_report(self, action_type, export_format, timezone, template, dashid):
+        content = {
+            "action": {
+                "actionType": action_type,
+            },
+            "exportFormat": export_format,
+            "timezone": timezone,
+            "template": {
+                "templateType": template,
+                "id": dashid
+            }
+        }
+        r = self.post('/dashboards/reportJobs', params=content, version='v2')
+        return json.loads(r.text)['id']
+
+    # check status of dashboard report
+    def report_status(self, jobID):
+        r = self.get('/dashboards/reportJobs/' + str(jobID) + '/status', params=jobID, version='v2')
+        return json.loads(r.text)['status']
+        
+    # get result of dashboard report
+    def report_result(self, jobID):
+        r = self.get_file('/dashboards/reportJobs/' + str(jobID) + '/result', params=jobID, version='v2')
+        return r
+
+    # get file
+    def get_file(self, method, params, headers=None, version=None):
+        """
+        Handle file uploads via a separate post request to avoid having to clear
+        the content-type header in the session.
+
+        Requests (or urllib3) does not set a boundary in the header if the content-type
+        is already set to multipart/form-data.  Urllib will create a boundary but it
+        won't be specified in the content-type header, producing invalid POST request.
+
+        Multi-threaded applications using self.session may experience issues if we
+        try to clear the content-type from the session.  Thus we don't re-use the
+        session for the upload, rather we create a new one off session.
+        
+        files = {'file': (params['file_name'], file_data)}
+        r = requests.post(endpoint + method, files=files, params=post_params,
+        auth=(self.session.auth[0], self.session.auth[1]), headers=headers)
+        """
+        version = version or self.DEFAULT_VERSION
+        endpoint = self.get_versioned_endpoint(version)
+        img = requests.get(endpoint + method, params=params, allow_redirects=True, auth=(self.session.auth[0], self.session.auth[1]), headers=headers)
+        filetype = params['exportFormat']
+        filename = 'result.' + str(filetype)
+        with open(filename, 'wb') as f:
+            f.write(img.content)
+        r = self.session.get(endpoint + method, params=params)
+        if 400 <= r.status_code < 600:
+            r.reason = r.text
+        r.raise_for_status()
+        return r
