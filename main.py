@@ -1,16 +1,13 @@
 import sys
 import time
 import configparser
+import datetime
 
-from datetime import datetime
-from pyfiglet import Figlet
 from lib.sumologic import SumoLogic
 
 config = configparser.ConfigParser()
 config.read("config.ini")
 now = datetime.now()
-f = Figlet(font='big')
-print(f.renderText('SumoLogic SDK'))
 c_datetime = now.strftime("%y/%m/%d_%H:%M:%S")
 print(c_datetime)
 
