@@ -4,6 +4,7 @@ CHANGELOG:
 - Added support for multiple custom jobs with the configuration file
 - Added PDF support
 - Changed progress bar to something much simpler
+- Changed README to be more helpful
 - Fixed some bugs with the output
 
 9/15/2022 - Version 1.1
