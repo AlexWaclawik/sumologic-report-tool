@@ -2,9 +2,13 @@
 
 This is a command-line tool that uses the [SumoLogic Python SDK](https://github.com/SumoLogic/sumologic-python-sdk) to generate a dashboard report. For more information on the SumoLogic API, [view the documentation here.](https://api.us2.sumologic.com/docs/#section/Getting-Started)
 
+### Usage
+
+Once you have setup your config file, you can run **sumotool.exe** and it will produce a snapshot of your specified dashboard. The snapshot is titled with a format of **%Yr%Mo%Day-%Hr%Min%Sec-Report.png** and is saved into **./reports/**.
+
 ### Configuration
 
-In *config.ini* you can change several values that will allow you to access your SumoLogic API. They are as follows:
+In **config.ini** you can change several values that will allow you to access your SumoLogic API. They are as follows:
 
 	1. accessID
 		* Your API Access ID.
@@ -23,12 +27,7 @@ In *config.ini* you can change several values that will allow you to access your
 		* "DashboardTemplate" is the default.
 		* "DashboardReportModeTemplate" is a printer-friendly version.
 
-### Usage
-
-Once you have setup your config file, you can run *sumotool.exe* and it will produce a snapshot of your specified dashboard. The snapshot is titled with a format of *%Yr%Mo%Day-%Hr%Min%Sec-Report.png* and is saved into *./reports/*.
-
 ### Credits
 
 1. [SumoLogic Python SDK](https://github.com/SumoLogic/sumologic-python-sdk)
-2. [Progress Bar](https://gist.github.com/vladignatyev/06860ec2040cb497f0f3)
-3. [Pyfiglet](https://github.com/pwaller/pyfiglet)
+2. [Pyfiglet](https://github.com/pwaller/pyfiglet)

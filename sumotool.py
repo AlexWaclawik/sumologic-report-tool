@@ -24,56 +24,63 @@ args = sys.argv
 accessID = config['API']['accessID']
 accessKey = config['API']['accessKey']
 sumo = SumoLogic(accessID, accessKey)
-dashID = config['REPORT']['dashboardID']
-actionType = config['REPORT']['actionType']
-exportFormat = config['REPORT']['exportFormat']
-timezone = config['REPORT']['timezone']
-template = config['REPORT']['template']
 
 def main():
-    time.sleep(3)
-    reportID = sumo.start_report(actionType, exportFormat, timezone, template, dashID)
+    time.sleep(1)
+    sections = config.sections()
+    num_of_reports = len(sections) - 1
+    for x in range(0, num_of_reports):
+        reportName = 'REPORT_' + str(x)
+        reportStatus = config[reportName].getboolean('enabled')
+        if reportStatus == True:
+            name = config[reportName]['name']
+            print("\n|--< Starting Job for '" + name + "' >--|")
+            dashID = config[reportName]['dashboardID']
+            actionType = config[reportName]['actionType']
+            exportFormat = config[reportName]['exportFormat']
+            timezone = config[reportName]['timezone']
+            template = config[reportName]['template']
+            reportID = sumo.start_report(actionType, exportFormat, timezone, template, dashID)
+            get_panel(reportID)
+            savedFile = rename_and_move(name, exportFormat)
+            print("SUCCESS: The Panel Report '" + savedFile + "' has been saved")
+        else:
+            continue
+
+def get_panel(reportID):
     print("Report Job ID: " + reportID)
     keepGoing = True
-    count = 0
-    total = 43
+    start_time = time.time()
     while (keepGoing):
         reportStatus = sumo.report_status(reportID)
         if reportStatus == "InProgress":
-            progress(count, total)
+            elap_time = round((time.time() - start_time), 2)
+            sys.stdout.write('...Job In Progress...    Elapsed Time: %s\r' % (elap_time))
+            sys.stdout.flush()
             time.sleep(0.5)
-            count += 1
             continue
         elif reportStatus == "Failed":
             print("ERROR: Report Job Has Failed")
             keepGoing = False
         elif reportStatus == "Success":
-            print("SUCCESS: Report Job Complete")
-            time.sleep(0.5)
             reportGenerate = sumo.report_result(reportID)
-            rename_and_move()
-            print("SUCCESS: Report Generation Complete")
+            time.sleep(0.5)
+            print("\nSUCCESS: Report Job Complete")
             keepGoing = False
 
-
-def progress(count, total):
-    status = "Report Job In Progress..."
-    bar_len = 60
-    filled_len = int(round(bar_len * count / float(total)))
-    percents = round(100.0 * count / float(total), 1)
-    bar = '=' * filled_len + '-' * (bar_len - filled_len)
-    sys.stdout.write('[%s] %s%s %s\r' % (bar, percents, '%', status))
-    sys.stdout.flush()
-
-
-def rename_and_move():
-    filename = f_datetime + "-Report.png"
+def rename_and_move(name, format):
+    if format == "Png":
+        fileExt = ".png"
+    elif format == "Pdf":
+        fileExt = ".pdf"
+    filename = f_datetime + "_" + name + "_Report" + fileExt
     src = str(cwd) + "\\result.png"
     dst = "../reports/"
     os.rename(src, filename)
     report = "./" + filename
     shutil.copy(report, dst)
     os.remove(filename)
+    return(filename)
 
 if __name__ == "__main__":
     main()
