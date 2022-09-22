@@ -1,6 +1,6 @@
 # SumoLogic Report Tool
 # Created by Alex Waclawik
-# Version 1.2
+# Version 1.2.1
 
 import sys
 import time
@@ -25,7 +25,6 @@ f_datetime = now.strftime("%y%m%d-%H%M%S")
 print("SumoLogic SDK")
 print("The date is " + c_date + " and the time is currently " + c_time)
 
-# initialize sumologic api
 args = sys.argv
 accessID = config['API']['accessID']
 accessKey = config['API']['accessKey']
@@ -33,10 +32,10 @@ sumo = SumoLogic(accessID, accessKey)
 
 def main():
     time.sleep(1)
-    # get number of sections in config then subtract one to get number of reports
+    # get number of sections in config to get number of reports
     sections = config.sections()
-    num_of_reports = len(sections) - 1
-    for x in range(0, num_of_reports):
+    num_of_reports = len(sections)
+    for x in range(0, num_of_reports - 1):
         # check if report is enabled
         reportName = 'REPORT_' + str(x)
         reportStatus = config[reportName].getboolean('enabled')
@@ -50,7 +49,10 @@ def main():
             timezone = config[reportName]['timezone']
             template = config[reportName]['template']
             # start the report job
-            reportID = sumo.start_report(actionType, exportFormat, timezone, template, dashID)
+            try:
+                reportID = sumo.start_report(actionType, exportFormat, timezone, template, dashID)
+            except ConnectionError:
+                print("ERROR: Connection Aborted")
             # wait for the report job to finish
             get_panel(reportID)
             # rename and move the file to its final location
