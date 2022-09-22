@@ -30,10 +30,6 @@ The second and following headers are where you will put your jobs:
 * Each report has to be in sequential order.
 * You can have as many reports as you want.
 ```ini
-enabled = true
-```
-* Tells the tool whether to ignore this report or not. Useful for troubleshooting issues.
-```ini
 name = My_Panel
 ```
 * Name of the panel. This is what will be used to generate the name of the report.

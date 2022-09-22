@@ -1,3 +1,8 @@
+9/27/2022 - Version 1.3.0
+
+CHANGELOG:
+- Added ability to generate all reports at once and cycle through them
+
 9/22/2022 - Version 1.2.1
 
 CHANGELOG:
@@ -5,7 +10,7 @@ CHANGELOG:
 - Changed README
 - Fixed misc bugs
 
-9/20/2022 - Version 1.2
+9/20/2022 - Version 1.2.0
 
 CHANGELOG:
 - Added support for multiple custom jobs with the configuration file
@@ -14,7 +19,7 @@ CHANGELOG:
 - Changed README to be more helpful
 - Fixed some bugs with the output
 
-9/15/2022 - Version 1.1
+9/15/2022 - Version 1.1.0
 
 CHANGELOG:
 - Added progress bar
