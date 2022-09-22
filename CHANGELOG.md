@@ -1,3 +1,8 @@
+9/22/2022 - Version 1.2.1
+- Added "noconsole" Version
+- Changed README
+- Fixed misc bugs
+
 9/20/2022 - Version 1.2
 
 CHANGELOG:

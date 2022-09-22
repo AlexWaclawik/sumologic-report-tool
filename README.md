@@ -1,16 +1,20 @@
 ## Sumologic Report Job Tool
 
-This is a command-line tool that uses the [SumoLogic Python SDK](https://github.com/SumoLogic/sumologic-python-sdk) and [SumoLogic API](https://api.us2.sumologic.com/docs/#section/Getting-Started) to generate a PNG or PDF report of one or more dashboards. It is intended as an automated task to be ran on a schedule.
+This is a command-line tool that uses the [SumoLogic API](https://api.us2.sumologic.com/docs/#section/Getting-Started) to generate a PNG or PDF report of one or more dashboards.
+
+This project uses a forked version of the [SumoLogic Python SDK](https://github.com/SumoLogic/sumologic-python-sdk) that I have updated to support the dashboard snapshots feature. If you would like to work off this project, you will need the include the alternate library located in **/lib/sumologic**.
 
 <p align="right"></p>
 
 ### Usage
 
-To start, you must edit the configuration file which is located in **/sumotool/config.ini**. **NOTE: The config file is CASE SENSITIVE!** Once you have setup your config file, you can run **sumotool.exe** and it will produce a snapshot of your specified dashboard and will save it into **./reports/**.
+First, [download the latest release](https://github.com/AlexWaclawik/sumologic-report-tool/releases). To generate a report, you must edit the configuration file which is located in **/sumotool/config.ini**. See the section below on how to edit. * Once you have setup your config file, you can run **sumotool.exe** and it will produce a snapshot of your specified dashboard and will save it into **/reports/**.
 
 <p align="right"></p>
 
 ### Configuration
+
+**NOTE: The config file is CASE SENSITIVE!**
 
 The first header is where you will put your API access ID and access key:
 ```ini
