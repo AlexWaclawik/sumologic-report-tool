@@ -1,8 +1,6 @@
 ## Sumologic Report Job Tool
 
-This is a command-line tool that uses the [SumoLogic API](https://api.us2.sumologic.com/docs/#section/Getting-Started) to generate a PNG or PDF report of one or more dashboards.
-
-This project uses a forked version of the [SumoLogic Python SDK](https://github.com/SumoLogic/sumologic-python-sdk) that I have updated to support the dashboard snapshots feature. If you would like to work off this project, you will need the include the alternate library located in **/lib/sumologic**.
+This is a command-line tool that uses the [SumoLogic API](https://api.us2.sumologic.com/docs/#section/Getting-Started) to generate a PNG or PDF report of one or more dashboards. It uses a forked version of the [SumoLogic Python SDK](https://github.com/SumoLogic/sumologic-python-sdk) that I have updated to support the dashboard snapshots feature. If you would like to work off this project, you will need the include the alternate library located in **/lib/sumologic**.
 
 <p align="right"></p>
 
