@@ -9,7 +9,6 @@ import shutil
 import os
 import pathlib
 from datetime import datetime
-from pyfiglet import Figlet
 from lib.sumologic import SumoLogic
 
 # sets the path 
@@ -23,9 +22,7 @@ now = datetime.now()
 c_date = now.strftime("%y/%m/%d")
 c_time = now.strftime("%H:%M:%S")
 f_datetime = now.strftime("%y%m%d-%H%M%S")
-# startup font
-f = Figlet(font='smslant')
-print(f.renderText('SumoLogic SDK'))
+print("SumoLogic SDK")
 print("The date is " + c_date + " and the time is currently " + c_time)
 
 # initialize sumologic api
@@ -59,6 +56,7 @@ def main():
             # rename and move the file to its final location
             savedFile = rename_and_move(name, exportFormat)
             print("SUCCESS: The Panel Report '" + savedFile + "' has been saved")
+            time.sleep(1)
         else:
             continue
 
