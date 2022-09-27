@@ -1,6 +1,6 @@
 # SumoLogic Report Tool
 # Created by Alex Waclawik
-# Version 1.3.0
+# Version 1.3.1
 
 import sys
 import time
@@ -25,7 +25,7 @@ now = datetime.now()
 c_date = now.strftime("%y/%m/%d")
 c_time = now.strftime("%H:%M:%S")
 f_datetime = now.strftime("%y%m%d-%H%M%S")
-print("SumoLogic Report Tool 1.3.0")
+print("SumoLogic Report Tool 1.3.1")
 print("The date is " + c_date + " and the time is currently " + c_time)
 
 # establish API connection
@@ -87,6 +87,8 @@ def do_jobs():
             keepGoing = False
     print("\n|--< Jobs Finished >--|")
 
+
+
 def rename_and_move():
     for x in range(0, report_num):
         # generate the snapshot
@@ -98,17 +100,13 @@ def rename_and_move():
             fileExt = ".pdf"
         # concatenate the filename and specify source and destination
         filename = f_datetime + "_" + job_arr[x].name + "_Report" + fileExt
-        src = str(cwd) + "\\result.png"
+        src = str(cwd) + "\\result" + fileExt
         dst = "../reports/"
         # rename the file, copy to new destination, then remove source
         os.rename(src, filename)
         report = "./" + filename
-        # I have it sleep after copy and delete functions otherwise it will move to fast
-        # better solution is to run on single thread
         shutil.copy(report, dst)
-        time.sleep(3)
         os.remove(filename)
-        time.sleep(3)
         print("\nSUCCESS: The Panel Report '" + filename + "' has been saved")
 
 if __name__ == "__main__":
