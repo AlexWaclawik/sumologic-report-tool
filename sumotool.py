@@ -18,6 +18,7 @@ cwd = pathlib.Path().resolve()
 # initialize configparser
 config = configparser.ConfigParser()
 config.read("config.ini")
+version = config['API']['version']
 sections = config.sections()
 report_num = (len(sections) - 1)
 # initialize date and time, as well as declare date and time vars
@@ -25,7 +26,7 @@ now = datetime.now()
 c_date = now.strftime("%y/%m/%d")
 c_time = now.strftime("%H:%M:%S")
 f_datetime = now.strftime("%y%m%d-%H%M%S")
-print("SumoLogic Report Tool 1.3.1")
+print("SumoLogic Report Tool " + version)
 print("The date is " + c_date + " and the time is currently " + c_time)
 
 # establish API connection
@@ -86,8 +87,6 @@ def do_jobs():
         if running_jobs == 0:
             keepGoing = False
     print("\n|--< Jobs Finished >--|")
-
-
 
 def rename_and_move():
     for x in range(0, report_num):
