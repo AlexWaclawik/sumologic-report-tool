@@ -1,4 +1,9 @@
-9/27/2022 - Version 1.3.0
+9/27/2022 - Version 1.3.1
+
+CHANGELOG:
+- Misc bug fixes
+
+9/22/2022 - Version 1.3.0
 
 CHANGELOG:
 - Added ability to generate all reports at once and cycle through them
