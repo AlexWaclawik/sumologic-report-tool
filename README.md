@@ -46,6 +46,7 @@ actionType = DirectDownloadReportAction
 exportFormat = Png
 ```
 * Specifices the export format of the report:
+	- **PDF appears broken on API side, just use PNG for now.**
 	- PDF -> **Pdf**
 	- PNG -> **Png**
 ```ini
