@@ -128,7 +128,7 @@ def create_ticket(filename):
     path = "../reports/" + filename
     jira = JIRA(server = url, basic_auth = (username, key))
     time.sleep(1)
-    new_issue = jira.create_issue(project=projID, summary=summary, description=description, issuetype={'name': 'Service Request'})
+    new_issue = jira.create_issue(project=projID, summary=summary, description=description, issuetype={'name': 'Bug'})
     jira.add_attachment(issue = new_issue, attachment = path)
     print("\nSUCCESS: The JIRA Ticket Has Been Created")
 
