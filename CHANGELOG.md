@@ -1,3 +1,13 @@
+10/13/2022 - Version 1.4.0
+
+CHANGELOG:
+- Added automatic JIRA ticket creation
+
+10/6/2022 - Version 1.3.2
+
+CHANGELOG:
+- More bug fixes
+
 9/27/2022 - Version 1.3.1
 
 CHANGELOG:

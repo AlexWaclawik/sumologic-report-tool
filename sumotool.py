@@ -1,6 +1,6 @@
 # SumoLogic Report Tool
 # Created by Alex Waclawik
-# Version 1.3.1
+# Version 1.4.0
 
 import sys
 import time
@@ -9,14 +9,28 @@ import shutil
 import os
 import pathlib
 from datetime import datetime
+from jira import JIRA
 from lib.sumologic import SumoLogic
 from bin.reportJob import ReportJob
 
-# sets the path 
+# sets the path
 cwd = pathlib.Path().resolve()
 
 # initialize configparser
 config = configparser.ConfigParser()
+
+# initialize jira vars
+config.read("jira-cfg.ini")
+jira_enabled = config['API'].getboolean('enabled')
+if jira_enabled == True:
+    url = config['API']['url']
+    username = config['API']['username']
+    key = config['API']['key']
+    auth = config['API']['auth']
+    projID = config['API']['id']
+    summary = config['API']['summary']
+    description = config['API']['description']
+
 config.read("config.ini")
 version = config['API']['version']
 sections = config.sections()
@@ -107,6 +121,16 @@ def rename_and_move():
         shutil.copy(report, dst)
         os.remove(filename)
         print("\nSUCCESS: The Panel Report '" + filename + "' has been saved")
+        if jira_enabled == True:
+            create_ticket(filename)
+
+def create_ticket(filename):
+    path = "../reports/" + filename
+    jira = JIRA(server = url, basic_auth = (username, key))
+    time.sleep(1)
+    new_issue = jira.create_issue(project=projID, summary=summary, description=description, issuetype={'name': 'Service Request'})
+    jira.add_attachment(issue = new_issue, attachment = path)
+    print("\nSUCCESS: The JIRA Ticket Has Been Created")
 
 if __name__ == "__main__":
     main()
