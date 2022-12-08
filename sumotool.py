@@ -9,9 +9,9 @@ import shutil
 import os
 import pathlib
 from datetime import datetime
-from jira import JIRA
-from lib.sumologic import SumoLogic
-from bin.reportJob import ReportJob
+from ext.jira import JIRA
+from ext.sumologic import SumoLogic
+from lib.reportJob import ReportJob
 
 # sets the path
 cwd = pathlib.Path().resolve()
@@ -20,7 +20,7 @@ cwd = pathlib.Path().resolve()
 config = configparser.ConfigParser()
 
 # initialize jira vars
-config.read("jira-cfg.ini")
+config.read("configs\jira-cfg.ini")
 jira_enabled = config['API'].getboolean('enabled')
 if jira_enabled == True:
     url = config['API']['url']
@@ -31,7 +31,7 @@ if jira_enabled == True:
     summary = config['API']['summary']
     description = config['API']['description']
 
-config.read("config.ini")
+config.read("configs\config.ini")
 version = config['API']['version']
 sections = config.sections()
 report_num = (len(sections) - 1)
@@ -114,7 +114,7 @@ def rename_and_move():
         # concatenate the filename and specify source and destination
         filename = f_datetime + "_" + job_arr[x].name + "_Report" + fileExt
         src = str(cwd) + "\\result" + fileExt
-        dst = "../reports/"
+        dst = "/reports/"
         # rename the file, copy to new destination, then remove source
         os.rename(src, filename)
         report = "./" + filename
@@ -125,10 +125,10 @@ def rename_and_move():
             create_ticket(filename)
 
 def create_ticket(filename):
-    path = "../reports/" + filename
+    path = "/reports/" + filename
     jira = JIRA(server = url, basic_auth = (username, key))
     time.sleep(1)
-    new_issue = jira.create_issue(project=projID, summary=summary, description=description, issuetype={'name': 'Bug'})
+    new_issue = jira.create_issue(project=projID, summary=summary, description=description, issuetype={'name': 'Service Request'})
     jira.add_attachment(issue = new_issue, attachment = path)
     print("\nSUCCESS: The JIRA Ticket Has Been Created")
 
